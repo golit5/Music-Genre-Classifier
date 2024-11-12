@@ -8,7 +8,30 @@ import pandas as pd
 from argparse import ArgumentParser
 
 def Calculate_Channel(wave, sr):
+    '''
+    Calculate_Channel(wave, sr)
+    
+    wave : np.ndarray(t)
+        Audio signal, np.ndarray from librosa.load(...)
+    sr : int
+        Sample rate, number from librosa.load(...)
 
+    Returns a tuple, containing:
+    rms : np.ndarray(t)
+        Root Mean Squared of audio signal 
+    zcr : np.ndarray(t)
+        Zero Crossing Rate of audio signal
+    sce : np.ndarray(t)   
+        Spectral Centroid of audio signal  
+    sb : np.ndarray(t)    
+        Spectral Bandwidth of audio signal
+    sro : np.ndarray(t)   
+        Spectral Rolloff of audio signal
+    sco : np.ndarray(7, t)   
+        Spectral Contrast of audio signal  
+    mfccs : np.ndarray(n_mfccs, t)
+        MFCCs of audio signal             
+    '''
     rms =   librosa.feature.rms(y=wave, frame_length=frame_size, hop_length=hop_length)[0]
     zcr =   librosa.feature.zero_crossing_rate(y=wave, frame_length=frame_size,hop_length=hop_length)[0]
     sce =   librosa.feature.spectral_centroid(y=wave, sr=sr, n_fft=frame_size,hop_length=hop_length)[0]
@@ -19,7 +42,42 @@ def Calculate_Channel(wave, sr):
     return  (rms, zcr, sce, sb, sro, sco, mfccs)
 
 def Calculate_Features(wav_file_path):
+    '''
+    Calculate_Features(wav_file_path)
 
+    wav_file_path : str
+        Path to WAV file
+
+    Returns a list, containing:
+    rms_mean : float
+        Root Mean Squared mean
+    rms_std : float
+        Root Mean Squared standard deviation
+    zcr_mean : float
+        Zero Crossing Rate mean
+    zcr_std : float
+        Zero Crossing Rate standard deviation
+    sce_mean : float
+        Spectral Centroid mean
+    sce_std : float
+        Spectral Centroid standard deviation
+    sb_mean : float
+        Spectral Bandwidt mean
+    sb_std : float
+        Spectral Bandwidth standard deviation
+    sro_mean : float
+        Spectral Rolloff mean
+    sro_std : float
+        Spectral Rolloff standard deviation
+    sco_mean0, ..., sco_mean6 : float
+        Spectral Contrast mean
+    sco_std0, ..., sco_std6 : float
+        Spectral Contrast standard deviation
+    mfcc_mean0, ...,  mfcc_meanN : float
+        MFCCs mean
+    mfcc_std0, ...,  mfcc_stdN : float
+        MFCCs std
+    '''
     features = []
 
     wave, sr = librosa.load(wav_file_path, mono = False)
@@ -48,14 +106,13 @@ def Calculate_Features(wav_file_path):
             res = Calculate_Channel(wave[i, :], sr)
         else:
             res = Calculate_Channel(wave, sr)
-        rms += [res[0]]
-        zcr += [res[1]]
-        sce += [res[2]]
-        sb += [res[3]]
-        sro += [res[4]]
-        27
-        sco += [res[5]]
-        mfccs += [res[6]]
+        rms +=      [res[0]]
+        zcr +=      [res[1]]
+        sce +=      [res[2]]
+        sb +=       [res[3]]
+        sro +=      [res[4]]
+        sco +=      [res[5]]
+        mfccs +=    [res[6]]
 
     rms = array(rms).mean(axis = 0)
     zcr = array(zcr).mean(axis = 0)

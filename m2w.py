@@ -5,6 +5,13 @@ from argparse import ArgumentParser
 from pydub import AudioSegment
 
 def convert_to_wav(in_path, out_path):
+    '''
+    convert_to_wav(in_path, out_path)
+    
+    in_path:    path to a mp3 file
+
+    Exports WAV audio signal to out_path
+    '''
     if '.mp3' not in in_path.split('/')[-1]:
         return
 
@@ -21,6 +28,13 @@ def convert_to_wav(in_path, out_path):
     return
 
 def list_files_of_tree(path):
+    '''
+    list_files_of_tree(path)
+    
+    path: path to a parent directory
+
+    Recursively adds paths to mp3 files to the global variable mp3_list
+    '''
     if str(out) == path:
         mp3_list.remove(path)
         print("One of input (sub)directories is equal to output directory. That bro is so cooked LMAO")
